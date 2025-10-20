@@ -39,6 +39,10 @@
     font-size: 15px;
     font-weight: bold;
 }
+.btn:hover{
+    color: #1af;
+    border: 2px solid #1af;
+}
 
 a{
     text-decoration: none;

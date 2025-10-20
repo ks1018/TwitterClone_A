@@ -1,12 +1,49 @@
+<?php
+// エラー表示あり
+ini_set('display_errors', 1);
+// 日本時間にする
+date_default_timezone_set('Asia/Tokyo');
+// URL/ディレクトリ設定
+define('HOME_URL','http://localhost/TwitterClone_A/');
+
+///////////////////////////////////////////////////
+// ツイート一覧
+//////////////////////////////////////////////////
+$view_tweets = [
+    [
+        'user_id' => 1,
+        'user_name' => 'taro',
+        'user_nickname' => '太郎',
+        'user_image_name' => 'sample-person.jpg',
+        'tweet_body' => '今プログラミングをしています。',
+        'tweet_image_name' => null,
+        'tweet_created_at' => '2021-03-15 14:00:00',
+        'like_id' => null,
+        'like_count' => 0,
+    ],
+    [
+        'user_id' => 2,
+        'user_name' => 'jiro',
+        'user_nickname' => '次郎',
+        'user_image_name' => null,
+        'tweet_body' => 'コワーキングスペースをオープンしました！',
+        'tweet_image_name' => 'sample-post.jpg',
+        'tweet_created_at' => '2021-03-14 14:00:00',
+        'like_id' => 1,
+        'like_count' => 1,
+    ]
+];
+?>
+
 <!DOCTYPE html>
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" href="../Views/img/logo-twitterblue.svg">
+    <link rel="icon" href="<?php echo HOME_URL; ?>Views/img/logo-twitterblue.svg">
     <!-- CSS only -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
-    <link rel="stylesheet" href="../Views/css/style.css">
+    <link rel="stylesheet" href="<?php echo HOME_URL; ?>Views/css/style.css">
 
     <title>ホーム画面 / Twitterクローン</title>
     <meta name="description" content="ホーム画面です">
@@ -16,13 +53,13 @@
         <div class="side">
             <div class="side-inner">
                 <ul class="nav flex-column">
-                    <li class="nav-item"><a href="home.php" class="nav-link"><img src="../Views/img/logo-twitterblue.svg" alt="" class="icon"></a></li>
-                    <li class="nav-item"><a href="home.php" class="nav-link"><img src="../Views/img/icon-home.svg" alt=""></a></li>
-                    <li class="nav-item"><a href="search.php" class="nav-link"><img src="../Views/img/icon-search.svg" alt=""></a></li>
-                    <li class="nav-item"><a href="notification.php" class="nav-link"><img src="../Views/img/icon-notification.svg" alt=""></a></li>
-                    <li class="nav-item"><a href="profile.php" class="nav-link"><img src="../Views/img/icon-profile.svg" alt=""></a></li>
-                    <li class="nav-item"><a href="post.php" class="nav-link"><img src="../Views/img/icon-post-tweet-twitterblue.svg" alt="" class="post"></a></li>
-                    <li class="nav-item myicon"><img src="../Views/img_uploaded/user/sample-person.jpg" alt=""></li>
+                    <li class="nav-item"><a href="home.php" class="nav-link"><img src="<?php echo HOME_URL; ?>Views/img/logo-twitterblue.svg" alt="" class="icon"></a></li>
+                    <li class="nav-item"><a href="home.php" class="nav-link"><img src="<?php echo HOME_URL; ?>Views/img/icon-home.svg" alt=""></a></li>
+                    <li class="nav-item"><a href="search.php" class="nav-link"><img src="<?php echo HOME_URL; ?>Views/img/icon-search.svg" alt=""></a></li>
+                    <li class="nav-item"><a href="notification.php" class="nav-link"><img src="<?php echo HOME_URL; ?>Views/img/icon-notification.svg" alt=""></a></li>
+                    <li class="nav-item"><a href="profile.php" class="nav-link"><img src="<?php echo HOME_URL; ?>Views/img/icon-profile.svg" alt=""></a></li>
+                    <li class="nav-item"><a href="post.php" class="nav-link"><img src="<?php echo HOME_URL; ?>Views/img/icon-post-tweet-twitterblue.svg" alt="" class="post"></a></li>
+                    <li class="nav-item myicon"><img src="<?php echo HOME_URL; ?>Views/img_uploaded/user/sample-person.jpg" alt=""></li>
                 </ul>
             </div>
         </div>
@@ -34,7 +71,7 @@
             <!-- つぶやき投稿エリア -->
             <div class="tweet-post">
                 <div class="myicon">
-                    <img src="../Views/img_uploaded/user/sample-person.jpg" alt="">
+                    <img src="<?php echo HOME_URL; ?>Views/img_uploaded/user/sample-person.jpg" alt="">
                 </div>
                 <div class="input-area">
                     <form action="post.php" method="post" enctype="multipart/form-data">
@@ -53,54 +90,48 @@
             <div class="ditch"></div>
 
             <!-- つぶやき一覧エリア -->
-            <div class="tweet-list">
-                <div class="tweet">
-                    <div class="user">
-                        <a href="profile.php?user_id=1">
-                            <img src="../Views/img_uploaded/user/sample-person.jpg" alt="">
-                        </a>
-                    </div>
-                    <div class="content">
-                        <div class="name">
+            <?php if (empty($view_tweets)) : ?>
+                <p class="p-3">ツイートがありません</p>
+            <?php else: ?>
+                <div class="tweet-list">
+                    <?php foreach($view_tweets as $view_tweet): ?>
+                    <div class="tweet">
+                        <div class="user">
                             <a href="profile.php?user_id=1">
-                                <span class="nickname">太郎</span>
-                                <span class="username">@taro ・23日前 </span>
+                                <img src="<?php echo HOME_URL; ?>Views/img_uploaded/user/<?php echo $view_tweet['user_image_name']; ?>" alt="">
                             </a>
                         </div>
-                        <p>今プログラミングをしています。</p>
-                        <div class="icon-list">
-                            <div class="like">
-                                <img src="../Views/img/icon-heart.svg" alt="">
+                        <div class="content">
+                            <div class="name">
+                                <a href="profile.php?user_id=<?php echo $view_tweet['user_id']; ?>">
+                                    <span class="nickname"><?php echo $view_tweet['user_name']; ?></span>
+                                    <span class="username"><?php echo $view_tweet['user_nickname']; ?> ・<?php echo $view_tweet['tweet_created_at']; ?> </span>
+                                </a>
                             </div>
-                            <div class="like-count">0</div>
+                            <p><?php echo $view_tweet['tweet_body']; ?></p>
+                            <?php if (isset($view_tweet['tweet_image_name'])): ?>
+                                <img src="<?php echo HOME_URL; ?>Views/img_uploaded/tweet/<?php echo $view_tweet['tweet_image_name']; ?>" alt="" class="post-image">
+                            <?php endif; ?>
+                            <div class="icon-list">
+                                <div class="like">
+                                    <?php
+                                    if (isset($view_tweet['like_id'])){
+                                        // いいね！している場合、青のハートを表示
+                                        echo '<img src="' . HOME_URL . 'Views/img/icon-heart-twitterblue.svg" alt="">';
+                                    } else {
+                                        // いいね！していない場合、グレーのハートを表示
+                                        echo '<img src="' . HOME_URL . 'Views/img/icon-heart.svg" alt="">';
+                                    }
+                                    ?>
+                                </div>
+                                <div class="like-count"><?php echo $view_tweet['like_count']; ?></div>
+                            </div>
                         </div>
                     </div>
-                </div>
+                    <?php endforeach; ?>
 
-                <div class="tweet">
-                    <div class="user">
-                        <a href="profile.php?user_id=2">
-                            <img src="../Views/img/icon-default-user.svg" alt="">
-                        </a>
-                    </div>
-                    <div class="content">
-                        <div class="name">
-                            <a href="profile.php?user_id=2">
-                                <span class="nickname">次郎</span>
-                                <span class="username">@jiro ・24日前 </span>
-                            </a>
-                        </div>
-                        <p>コワーキングスペースをオープンしました。</p>
-                        <img src="../Views/img_uploaded/tweet/sample-post.jpg" alt="" class="post-image">
-                        <div class="icon-list">
-                            <div class="like">
-                                <img src="../Views/img/icon-heart-twitterblue.svg" alt="">
-                            </div>
-                            <div class="like-count">1</div>
-                        </div>
-                    </div>
                 </div>
-            </div>
+            <?php endif; ?>
         </div>
     </div>
 </body>
