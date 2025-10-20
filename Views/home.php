@@ -28,11 +28,66 @@ $view_tweets = [
         'user_image_name' => null,
         'tweet_body' => 'コワーキングスペースをオープンしました！',
         'tweet_image_name' => 'sample-post.jpg',
-        'tweet_created_at' => '2021-03-14 14:00:00',
+        'tweet_created_at' => '2025-10-14 14:00:00',
         'like_id' => 1,
         'like_count' => 1,
     ]
 ];
+
+/////////////////////////////////
+// 便利な関数
+////////////////////////////////
+
+/**
+ * 画像ファイル名から画像のURLを生成する
+ * 
+ * @param string $name 画像ファイル名
+ * @param string $type user | tweet
+ * @return string
+ */
+function buildImagePath(?string $name = null, string $type)
+{
+    if ($type === 'user' && !isset($name)) {
+        return HOME_URL . 'Views/img/icon-default-user.svg';
+    }
+
+    return HOME_URL . 'Views/img_uploaded/' . $type . '/' . htmlspecialchars($name);
+}
+
+/**
+ * 指定した日時からどれだけ経過したかを取得
+ * @param string $datetime 日時
+ * @return string
+ */
+function convertToDayTimeAgo(string $datetime)
+{
+    $unix = strtotime($datetime);
+    $now = time();
+    $diff_sec = $now - $unix;
+
+    if ($diff_sec < 60){
+        $time = $diff_sec;
+        $unit = '秒前';
+    } elseif ($diff_sec < 3600) {
+        $time = $diff_sec / 60;
+        $unit = '分前';
+    } elseif ($diff_sec < 86400) {
+        $time = $diff_sec / 3600;
+        $unit = '時間前';
+    } elseif ($diff_sec < 2764800) {
+        $time = $diff_sec / 86400;
+        $unit = '日前';
+    } else {
+        if (date('Y') !== date('Y', $unix)){
+            $time = date('Y年n月j日', $unix);
+        } else {
+            $time = date('n月j日', $unix);
+        }
+        return $time;
+    }
+    return (int)$time . $unit;
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -97,20 +152,20 @@ $view_tweets = [
                     <?php foreach($view_tweets as $view_tweet): ?>
                     <div class="tweet">
                         <div class="user">
-                            <a href="profile.php?user_id=1">
-                                <img src="<?php echo HOME_URL; ?>Views/img_uploaded/user/<?php echo $view_tweet['user_image_name']; ?>" alt="">
+                            <a href="profile.php?user_id=<?php echo htmlspecialchars($view_tweet['user_id']) ?>">
+                                <img src="<?php echo buildImagePath($view_tweet['user_image_name'], 'user'); ?>" alt="">
                             </a>
                         </div>
                         <div class="content">
                             <div class="name">
-                                <a href="profile.php?user_id=<?php echo $view_tweet['user_id']; ?>">
-                                    <span class="nickname"><?php echo $view_tweet['user_name']; ?></span>
-                                    <span class="username"><?php echo $view_tweet['user_nickname']; ?> ・<?php echo $view_tweet['tweet_created_at']; ?> </span>
+                                <a href="profile.php?user_id=<?php echo htmlspecialchars($view_tweet['user_id']); ?>">
+                                    <span class="nickname"><?php echo htmlspecialchars($view_tweet['user_name']); ?></span>
+                                    <span class="username"><?php echo htmlspecialchars($view_tweet['user_nickname']); ?> ・<?php echo convertToDayTimeAgo($view_tweet['tweet_created_at']); ?> </span>
                                 </a>
                             </div>
-                            <p><?php echo $view_tweet['tweet_body']; ?></p>
+                            <p><?php echo htmlspecialchars($view_tweet['tweet_body']); ?></p>
                             <?php if (isset($view_tweet['tweet_image_name'])): ?>
-                                <img src="<?php echo HOME_URL; ?>Views/img_uploaded/tweet/<?php echo $view_tweet['tweet_image_name']; ?>" alt="" class="post-image">
+                                <img src="<?php echo buildImagePath($view_tweet['tweet_image_name'], 'tweet'); ?>" alt="" class="post-image">
                             <?php endif; ?>
                             <div class="icon-list">
                                 <div class="like">
@@ -124,7 +179,7 @@ $view_tweets = [
                                     }
                                     ?>
                                 </div>
-                                <div class="like-count"><?php echo $view_tweet['like_count']; ?></div>
+                                <div class="like-count"><?php echo htmlspecialchars($view_tweet['like_count']); ?></div>
                             </div>
                         </div>
                     </div>
