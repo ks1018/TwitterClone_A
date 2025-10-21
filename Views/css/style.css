@@ -309,3 +309,24 @@ body.signup{
     margin-right: 30px;
     color: #778;
 }
+/*
+検索
+****/
+.search .search-area{
+    display: flex;
+    padding: 15px;
+}
+.search .search-area input{
+    width: 70%;
+    max-width: 300px;
+    margin-right: 10px;
+}
+/*
+通知
+****/
+.notification .notification-list .no-result{}
+.notification .notification-list .notification-item{}
+.notification .notification-list .notification-item .user{}
+.notification .notification-list .notification-item .user img{}
+.notification .notification-list .notification-item .content{}
+.notification .notification-list .notification-item .content p{}
